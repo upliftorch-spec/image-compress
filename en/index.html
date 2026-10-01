@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="canonical" href="https://upliftorch.com/tools/image-compress/en/">
+<link rel="alternate" hreflang="zh-TW" href="https://upliftorch.com/tools/image-compress/">
+<link rel="alternate" hreflang="en" href="https://upliftorch.com/tools/image-compress/en/">
+<link rel="alternate" hreflang="x-default" href="https://upliftorch.com/tools/image-compress/en/">
+<title>Image Compressor — Free Online JPG, PNG, WebP Compression | ImageCompress</title>
+<meta name="description" content="Free online image compressor. Compress JPG, PNG, WebP images with batch processing, custom quality, and instant preview. All processing happens in your browser — no files uploaded.">
+<meta name="keywords" content="image compressor,compress images,JPG compression,PNG compression,WebP compression,online compressor,free compression,batch compress,image optimizer">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+
+<meta property="og:title" content="Image Compressor — Free Online Image Compression">
+<meta property="og:description" content="Free online image compressor. Supports JPG, PNG, WebP. All processing in browser — no upload.">
+<meta property="og:type" content="website">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#f0f4f8;--surface:#fff;--text:#1e293b;--text-secondary:#64748b;
+  --border:#e2e8f0;--primary:#10b981;--primary-dark:#059669;
+  --primary-light:rgba(16,185,129,.1);--radius:14px;
+  --shadow:0 2px 12px rgba(0,0,0,.06);--danger:#ef4444;--success:#22c55e;
+  --header-bg:linear-gradient(135deg,#059669,#10b981,#34d399);
+}
+[data-theme="dark"]{
+  --bg:#0f172a;--surface:#1e293b;--text:#e2e8f0;--text-secondary:#94a3b8;
+  --border:#334155;--primary:#34d399;--primary-dark:#6ee7b7;
+  --primary-light:rgba(16,185,129,.15);--shadow:0 2px 16px rgba(0,0,0,.3);
+  --header-bg:linear-gradient(135deg,#064e3b,#065f46,#047857);
+}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--primary);text-decoration:none}a:hover{text-decoration:underline}
+
+header{background:var(--header-bg);color:#fff;padding:0 20px}
+.header-inner{max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand h1{font-size:20px;font-weight:700;display:flex;align-items:center;gap:8px}
+.brand h1 span{opacity:.85;font-weight:400}
+.header-actions{display:flex;align-items:center;gap:12px}
+.lang-switch{color:#fff;background:rgba(255,255,255,.2);padding:4px 12px;border-radius:8px;font-size:13px;font-weight:600;transition:.2s}
+.lang-switch:hover{background:rgba(255,255,255,.35);text-decoration:none}
+.theme-toggle{background:rgba(255,255,255,.2);border:none;color:#fff;width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:18px;transition:.2s}
+.theme-toggle:hover{background:rgba(255,255,255,.35)}
+
+.container{max-width:960px;margin:0 auto;padding:32px 20px}
+.breadcrumb{font-size:13px;color:var(--text-secondary,#64748b);margin-bottom:20px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.breadcrumb a{color:var(--text-secondary,#64748b)}
+.breadcrumb a:hover{color:var(--primary,#ec4899)}
+.breadcrumb .sep{opacity:.5}
+.breadcrumb [aria-current]{color:var(--text,#1e293b);font-weight:600}
+
+.upload-area{border:2.5px dashed var(--border);border-radius:var(--radius);padding:48px 24px;text-align:center;cursor:pointer;transition:.3s;background:var(--surface)}
+.upload-area:hover,.upload-area.dragover{border-color:var(--primary);background:var(--primary-light)}
+.upload-area .icon{font-size:48px;margin-bottom:12px}
+.upload-area h2{font-size:20px;margin-bottom:8px}
+.upload-area p{color:var(--text-secondary);font-size:14px}
+#fileInput{display:none}
+
+.controls{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin:24px 0;padding:20px;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow)}
+.control-group{display:flex;align-items:center;gap:8px;flex:1;min-width:200px}
+.control-group label{font-size:14px;font-weight:600;white-space:nowrap}
+.control-group input[type="range"]{flex:1;accent-color:var(--primary)}
+.quality-val{font-size:14px;font-weight:700;color:var(--primary);min-width:36px}
+.format-select{padding:8px 12px;border:1.5px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text);font-size:14px;cursor:pointer}
+.btn{padding:10px 20px;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px)}
+.btn-danger{background:var(--danger);color:#fff}.btn-danger:hover{opacity:.9}
+.btn-outline{background:transparent;border:1.5px solid var(--border);color:var(--text)}.btn-outline:hover{border-color:var(--primary);color:var(--primary)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+.stats-bar{display:flex;gap:16px;flex-wrap:wrap;margin:16px 0}
+.stat-card{flex:1;min-width:140px;background:var(--surface);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);text-align:center}
+.stat-card .num{font-size:24px;font-weight:700;color:var(--primary)}
+.stat-card .label{font-size:12px;color:var(--text-secondary);margin-top:4px}
+
+.results{margin-top:16px}
+.result-item{display:grid;grid-template-columns:80px 1fr auto;gap:16px;align-items:center;padding:16px;background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:12px;transition:.2s}
+.result-item:hover{box-shadow:0 4px 20px rgba(0,0,0,.1)}
+.result-thumb{width:80px;height:60px;object-fit:cover;border-radius:8px;background:var(--bg)}
+.result-info{min-width:0}
+.result-name{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.result-meta{font-size:13px;color:var(--text-secondary);margin-top:4px;display:flex;flex-wrap:wrap;gap:8px}
+.result-meta .saved{color:var(--success);font-weight:600}
+.result-meta .increased{color:var(--danger);font-weight:600}
+.result-actions{display:flex;gap:8px}
+.btn-sm{padding:6px 14px;font-size:13px;border-radius:8px}
+
+.progress-bar{width:100%;height:4px;background:var(--border);border-radius:2px;overflow:hidden;margin-top:8px}
+.progress-bar .fill{height:100%;background:var(--primary);border-radius:2px;transition:width .3s}
+
+.feature-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin:40px 0}
+.feature-card{background:var(--surface);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow);text-align:center}
+.feature-card .feat-icon{font-size:36px;margin-bottom:12px}
+.feature-card h3{font-size:16px;margin-bottom:8px}
+.feature-card p{font-size:14px;color:var(--text-secondary)}
+
+.faq{margin:40px 0}
+.faq h2{font-size:22px;margin-bottom:20px;text-align:center}
+.faq-item{background:var(--surface);border-radius:var(--radius);margin-bottom:12px;box-shadow:var(--shadow);overflow:hidden}
+.faq-q{padding:16px 20px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-size:15px}
+.faq-q::after{content:"▼";font-size:12px;color:var(--text-secondary);transition:.3s}
+.faq-item.open .faq-q::after{transform:rotate(180deg)}
+.faq-a{padding:0 20px;max-height:0;overflow:hidden;transition:max-height .3s,padding .3s;font-size:14px;color:var(--text-secondary)}
+.faq-item.open .faq-a{padding:0 20px 16px;max-height:300px}
+
+.articles{margin:40px 0}
+.articles h2{font-size:22px;margin-bottom:20px;text-align:center}
+.article-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.article-card{background:var(--surface);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);text-decoration:none;color:inherit;transition:transform .2s,box-shadow .2s;display:block;border:1px solid var(--border)}
+.article-card:hover{transform:translateY(-2px);box-shadow:0 4px 16px rgba(0,0,0,.1);text-decoration:none}
+.article-card h3{font-size:15px;font-weight:600;margin-bottom:8px;color:var(--text)}
+.article-card p{font-size:13px;color:var(--text-secondary);line-height:1.5}
+.article-card .tag{display:inline-block;font-size:11px;background:var(--primary-light);color:var(--primary);padding:2px 8px;border-radius:4px;margin-top:10px;font-weight:600}
+footer{border-top:1px solid var(--border);padding:24px 20px;text-align:center;font-size:13px;color:var(--text-secondary);margin-top:40px}
+footer nav a{color:var(--text-secondary);margin:0 6px}footer nav a:hover{color:var(--primary)}
+
+.hidden{display:none!important}
+
+@media(max-width:767px){
+  .feature-grid{grid-template-columns:1fr}
+  .result-item{grid-template-columns:60px 1fr;gap:12px}
+  .result-actions{grid-column:1/-1;justify-content:flex-end}
+  .controls{flex-direction:column;align-items:stretch}
+  .control-group{min-width:auto}
+  .stats-bar{gap:8px}
+  .stat-card{min-width:0;padding:12px}
+  .article-grid{grid-template-columns:1fr}
+}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Image Compressor","url":"https://upliftorch.com/tools/image-compress/en/","description":"Free online image compressor supporting JPG, PNG, WebP formats","applicationCategory":"UtilityApplication","operatingSystem":"All","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"}}
+</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://upliftorch.com/"},{"@type":"ListItem","position":2,"name":"Free Online Tools","item":"https://upliftorch.com/tools-en"},{"@type":"ListItem","position":3,"name":"Image Compressor","item":"https://upliftorch.com/tools/image-compress/en/"}]}
+</script>
+<script src="https://cdn.jsdelivr.net/npm/pako@2.1.0/dist/pako.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/upng-js@2.1.0/UPNG.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand"><h1>🗜️ Image<span>Compress</span></h1></div>
+    <div class="header-actions">
+      <a href="https://upliftorch.com/tools/image-compress/" class="lang-switch">繁中</a>
+      <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="https://upliftorch.com/">Home</a>
+    <span class="sep">›</span>
+    <a href="https://upliftorch.com/tools-en">Free Online Tools</a>
+    <span class="sep">›</span>
+    <span aria-current="page">Image Compressor</span>
+  </nav>
+
+  <div class="upload-area" id="uploadArea">
+    <div class="icon">📁</div>
+    <h2>Drag & drop images here, or click to select</h2>
+    <p>Supports JPG, PNG, WebP, BMP, GIF — up to 50 files, max 50MB each</p>
+    <input type="file" id="fileInput" accept="image/*" multiple>
+  </div>
+
+  <div class="controls hidden" id="controls">
+    <div class="control-group">
+      <label>Mode</label>
+      <select class="format-select" id="modeSelect">
+        <option value="quality">By Quality</option>
+        <option value="target">Target Size</option>
+      </select>
+    </div>
+    <div class="control-group" id="qualityGroup">
+      <label>Quality</label>
+      <input type="range" id="qualitySlider" min="1" max="100" value="80">
+      <span class="quality-val" id="qualityVal">80%</span>
+    </div>
+    <div class="control-group hidden" id="targetGroup">
+      <label>Target Size</label>
+      <input type="number" id="targetSize" value="3" min="0.1" step="0.1" class="format-select" style="width:80px;flex:none">
+      <select class="format-select" id="targetUnit">
+        <option value="1048576">MB</option>
+        <option value="1024">KB</option>
+      </select>
+    </div>
+    <div class="control-group">
+      <label>Output Format</label>
+      <select class="format-select" id="formatSelect">
+        <option value="auto">Auto (keep original)</option>
+        <option value="image/jpeg">JPG</option>
+        <option value="image/png">PNG</option>
+        <option value="image/webp">WebP</option>
+      </select>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" id="compressBtn">🗜️ Compress</button>
+      <button class="btn btn-outline" id="downloadAllBtn" disabled>📦 Download All</button>
+      <button class="btn btn-danger btn-sm" id="clearBtn">✕ Clear</button>
+    </div>
+  </div>
+
+  <div class="stats-bar hidden" id="statsBar">
+    <div class="stat-card"><div class="num" id="statCount">0</div><div class="label">Images</div></div>
+    <div class="stat-card"><div class="num" id="statOriginal">0 KB</div><div class="label">Original Size</div></div>
+    <div class="stat-card"><div class="num" id="statCompressed">0 KB</div><div class="label">Compressed Size</div></div>
+    <div class="stat-card"><div class="num" id="statSaved">0%</div><div class="label">Saved</div></div>
+  </div>
+
+  <div class="results" id="results"></div>
+
+  <div class="feature-grid">
+    <div class="feature-card">
+      <svg class="feat-icon" width="1em" height="1em" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin-left:auto;margin-right:auto;color:var(--primary,var(--primary-color,#0f86b5))"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v2"/></svg>
+      <h3>100% Private</h3>
+      <p>All compression happens locally in your browser. No files are ever uploaded to any server.</p>
+    </div>
+    <div class="feature-card">
+      <svg class="feat-icon" width="1em" height="1em" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin-left:auto;margin-right:auto;color:var(--primary,var(--primary-color,#0f86b5))"><path d="m13 2-8 12h7l-1 8 8-12h-7l1-8Z"/></svg>
+      <h3>Batch Processing</h3>
+      <p>Compress up to 50 images at once with drag & drop batch upload support.</p>
+    </div>
+    <div class="feature-card">
+      <svg class="feat-icon" width="1em" height="1em" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin-left:auto;margin-right:auto;color:var(--primary,var(--primary-color,#0f86b5))"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/></svg>
+      <h3>Custom Quality</h3>
+      <p>Adjust compression quality from 1% to 100% with instant preview of results.</p>
+    </div>
+    <div class="feature-card">
+      <svg class="feat-icon" width="1em" height="1em" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin-left:auto;margin-right:auto;color:var(--primary,var(--primary-color,#0f86b5))"><path d="M20 7v5h-5M4 17v-5h5M6.1 8.5A7 7 0 0 1 18.5 7M17.9 15.5A7 7 0 0 1 5.5 17"/></svg>
+      <h3>Format Conversion</h3>
+      <p>Convert to JPG, PNG, or WebP while compressing for optimal file size.</p>
+    </div>
+    <div class="feature-card">
+      <svg class="feat-icon" width="1em" height="1em" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin-left:auto;margin-right:auto;color:var(--primary,var(--primary-color,#0f86b5))"><rect x="6" y="2.5" width="12" height="19" rx="2.5"/><path d="M10 5h4M11 18.5h2"/></svg>
+      <h3>Mobile Friendly</h3>
+      <p>Works perfectly on phones and tablets. Compress images anytime, anywhere.</p>
+    </div>
+    <div class="feature-card">
+      <svg class="feat-icon" width="1em" height="1em" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:block;margin-left:auto;margin-right:auto;color:var(--primary,var(--primary-color,#0f86b5))"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 7.6-1.7M12 14v2M19 3v3M17.5 4.5h3"/></svg>
+      <h3>Completely Free</h3>
+      <p>No registration, no limits, no watermarks. Free forever.</p>
+    </div>
+  </div>
+
+  <div class="articles">
+    <h2>Related Articles</h2>
+    <div class="article-grid">
+      <a href="https://upliftorch.com/tools/image-compress/en/blog/lossy-vs-lossless.html" class="article-card">
+        <h3>Lossy vs Lossless Compression: Principles and How to Choose</h3>
+        <p>Understand the technical differences between lossy and lossless compression, their use cases, and pros and cons to make the best choice between quality and file size.</p>
+        <span class="tag">Compression Basics</span>
+      </a>
+      <a href="https://upliftorch.com/tools/image-compress/en/blog/web-performance-images.html" class="article-card">
+        <h3>How Image Size Affects Web Performance</h3>
+        <p>From Core Web Vitals to real-world loading data, a comprehensive analysis of how image size impacts page speed and how compression can boost performance.</p>
+        <span class="tag">Performance</span>
+      </a>
+      <a href="https://upliftorch.com/tools/image-compress/en/blog/batch-image-optimization.html" class="article-card">
+        <h3>Best Practices for Batch Image Optimization</h3>
+        <p>When managing hundreds of images, how do you compress them efficiently? From workflow design to automation strategies, master batch optimization techniques.</p>
+        <span class="tag">Best Practices</span>
+      </a>
+      <a href="https://upliftorch.com/tools/image-compress/en/blog/image-quality-vs-size.html" class="article-card">
+        <h3>Quality vs Size: Finding the Optimal Compression Ratio</h3>
+        <p>What compression quality should you use? From SSIM metrics to real test data, learn how to scientifically find the sweet spot between quality and file size.</p>
+        <span class="tag">Advanced Guide</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="faq">
+    <h2>Frequently Asked Questions</h2>
+    <div class="faq-item"><div class="faq-q">Does compression reduce image quality?</div><div class="faq-a">Moderate compression (70%–85% quality) produces virtually indistinguishable results while reducing file size by 50%–80%. You can freely adjust the quality parameter based on your needs.</div></div>
+    <div class="faq-item"><div class="faq-q">Are my images uploaded anywhere?</div><div class="faq-a">No. All processing happens entirely in your browser. Your images never leave your device, ensuring complete privacy and security.</div></div>
+    <div class="faq-item"><div class="faq-q">What image formats are supported?</div><div class="faq-a">We support JPG, PNG, WebP, BMP, and GIF formats. After compression, you can choose to output as JPG, PNG, or WebP.</div></div>
+    <div class="faq-item"><div class="faq-q">How many images can I compress at once?</div><div class="faq-a">You can compress up to 50 images at once. For more images, simply process them in batches.</div></div>
+    <div class="faq-item"><div class="faq-q">How well does PNG compression work?</div><div class="faq-a">PNG is a lossless format, so browser-side compression is limited. For better results, consider converting PNG to WebP or JPG (if transparency is not needed).</div></div>
+  </div>
+
+</div>
+
+<footer>
+  <nav>
+    <a href="index.html">Home</a> ·
+    <a href="https://upliftorch.com/tools/image-compress/en/blog/index.html">Blog</a> ·
+    <a href="https://upliftorch.com/privacy-policy?lang=en">Privacy</a> ·
+    <a href="https://upliftorch.com/terms-of-service?lang=en">Terms</a>
+  </nav>
+  <p style="margin-top:8px">Image Compressor — all processing in browser, no files uploaded</p>
+  <p style="margin-top:4px;font-size:12px">&copy; <script>document.write(new Date().getFullYear())</script> Upliftorch. All rights reserved.</p>
+  <p style="margin-top:8px;font-size:13px">
+    <span style="color:#999">Other Tools: </span>
+    <a href="https://upliftorch.com/tools/convert-to-webp/">Convert to WebP</a> ·
+    <a href="https://upliftorch.com/tools/create-ico/">ICO Maker</a>
+  </p>
+</footer>
+
+<script>
+/* Dark Mode */
+const themeToggle = document.getElementById('themeToggle');
+const saved = localStorage.getItem('theme');
+if (saved) {
+  document.documentElement.setAttribute('data-theme', saved);
+  themeToggle.textContent = saved === 'dark' ? '☀️' : '🌙';
+} else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  document.documentElement.setAttribute('data-theme', 'dark');
+  themeToggle.textContent = '☀️';
+}
+themeToggle.addEventListener('click', () => {
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  const newTheme = isDark ? 'light' : 'dark';
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  themeToggle.textContent = isDark ? '🌙' : '☀️';
+});
+
+/* State */
+const files = [];
+const compressed = [];
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('fileInput');
+const controls = document.getElementById('controls');
+const statsBar = document.getElementById('statsBar');
+const results = document.getElementById('results');
+const qualitySlider = document.getElementById('qualitySlider');
+const qualityVal = document.getElementById('qualityVal');
+const formatSelect = document.getElementById('formatSelect');
+const modeSelect = document.getElementById('modeSelect');
+const qualityGroup = document.getElementById('qualityGroup');
+const targetGroup = document.getElementById('targetGroup');
+const targetSize = document.getElementById('targetSize');
+const targetUnit = document.getElementById('targetUnit');
+
+modeSelect.addEventListener('change', () => {
+  if (modeSelect.value === 'target') {
+    qualityGroup.classList.add('hidden');
+    targetGroup.classList.remove('hidden');
+  } else {
+    qualityGroup.classList.remove('hidden');
+    targetGroup.classList.add('hidden');
+  }
+});
+const compressBtn = document.getElementById('compressBtn');
+const downloadAllBtn = document.getElementById('downloadAllBtn');
+const clearBtn = document.getElementById('clearBtn');
+
+/* Upload */
+uploadArea.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', (e) => handleFiles(e.target.files));
+uploadArea.addEventListener('dragover', (e) => { e.preventDefault(); uploadArea.classList.add('dragover'); });
+uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+uploadArea.addEventListener('drop', (e) => {
+  e.preventDefault();
+  uploadArea.classList.remove('dragover');
+  handleFiles(e.dataTransfer.files);
+});
+
+function handleFiles(fileList) {
+  const imageFiles = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+  const remaining = 50 - files.length;
+  const toAdd = imageFiles.slice(0, remaining);
+  if (toAdd.length === 0) return;
+  toAdd.forEach(f => files.push(f));
+  controls.classList.remove('hidden');
+  statsBar.classList.remove('hidden');
+  updateStats();
+  renderFileList();
+  fileInput.value = '';
+}
+
+function formatSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / 1048576).toFixed(2) + ' MB';
+}
+
+function updateStats() {
+  const totalOriginal = files.reduce((s, f) => s + f.size, 0);
+  const totalCompressed = compressed.reduce((s, c) => s + c.size, 0);
+  const savedPct = totalCompressed > 0 ? Math.round((1 - totalCompressed / totalOriginal) * 100) : 0;
+  document.getElementById('statCount').textContent = files.length;
+  document.getElementById('statOriginal').textContent = formatSize(totalOriginal);
+  document.getElementById('statCompressed').textContent = compressed.length > 0 ? formatSize(totalCompressed) : '—';
+  document.getElementById('statSaved').textContent = compressed.length > 0 ? savedPct + '%' : '—';
+}
+
+function renderFileList() {
+  results.innerHTML = '';
+  files.forEach((f, i) => {
+    const c = compressed[i];
+    const div = document.createElement('div');
+    div.className = 'result-item';
+    const thumb = URL.createObjectURL(c ? c.blob : f);
+    const savedPct = c ? Math.round((1 - c.size / f.size) * 100) : null;
+    const savedClass = savedPct !== null ? (savedPct >= 0 ? 'saved' : 'increased') : '';
+    const savedText = savedPct !== null ? (savedPct >= 0 ? `Saved ${savedPct}%` : `Increased ${Math.abs(savedPct)}%`) : '';
+    div.innerHTML = `
+      <img src="${thumb}" class="result-thumb" alt="${f.name}">
+      <div class="result-info">
+        <div class="result-name">${f.name}</div>
+        <div class="result-meta">
+          <span>Original: ${formatSize(f.size)}</span>
+          ${c ? `<span>→ ${formatSize(c.size)}</span><span class="${savedClass}">${savedText}</span>${c.overTarget ? '<span class="increased">⚠ over target</span>' : ''}` : '<span style="color:var(--text-secondary)">Waiting</span>'}
+        </div>
+        ${c ? '' : '<div class="progress-bar" id="prog-' + i + '"><div class="fill" style="width:0%"></div></div>'}
+      </div>
+      <div class="result-actions">
+        ${c ? '<button class="btn btn-primary btn-sm" onclick="downloadOne(' + i + ')">⬇ Download</button>' : ''}
+        <button class="btn btn-outline btn-sm" onclick="removeFile(${i})">✕</button>
+      </div>`;
+    results.appendChild(div);
+  });
+}
+
+function removeFile(idx) {
+  files.splice(idx, 1);
+  compressed.splice(idx, 1);
+  if (files.length === 0) {
+    controls.classList.add('hidden');
+    statsBar.classList.add('hidden');
+    downloadAllBtn.disabled = true;
+  }
+  updateStats();
+  renderFileList();
+}
+
+/* Quality Slider */
+qualitySlider.addEventListener('input', () => {
+  qualityVal.textContent = qualitySlider.value + '%';
+});
+
+/* Compress */
+compressBtn.addEventListener('click', async () => {
+  compressBtn.disabled = true;
+  compressBtn.textContent = '⏳ Compressing...';
+  compressed.length = 0;
+  renderFileList();
+
+  const mode = modeSelect.value;
+  const targetBytes = parseFloat(targetSize.value) * parseInt(targetUnit.value, 10);
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    const quality = qualitySlider.value / 100;
+    const format = formatSelect.value;
+
+    const progBar = document.getElementById('prog-' + i);
+    if (progBar) progBar.querySelector('.fill').style.width = '50%';
+
+    let result;
+    if (mode === 'target') {
+      result = await compressToTargetSize(file, targetBytes, format);
+    } else {
+      result = await compressImage(file, quality, format);
+    }
+    compressed[i] = result;
+
+    if (progBar) progBar.querySelector('.fill').style.width = '100%';
+    updateStats();
+    renderFileList();
+  }
+
+  compressBtn.disabled = false;
+  compressBtn.textContent = '🗜️ Compress';
+  downloadAllBtn.disabled = false;
+});
+
+function compressImage(file, quality, outputFormat) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      const w = img.naturalWidth;
+      const h = img.naturalHeight;
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
+
+      let mime;
+      if (outputFormat === 'auto') {
+        if (file.type === 'image/png') {
+          mime = 'image/png';
+        } else if (file.type === 'image/webp') {
+          mime = 'image/webp';
+        } else {
+          mime = 'image/jpeg';
+        }
+      } else {
+        mime = outputFormat;
+      }
+
+      const baseName = file.name.replace(/\.[^.]+$/, '');
+
+      if (mime === 'image/png') {
+        const rgba = ctx.getImageData(0, 0, w, h).data.buffer;
+        const cnum = quality >= 1 ? 0 : Math.max(2, Math.round(256 * quality));
+        const pngData = UPNG.encode([rgba], w, h, cnum);
+        const blob = new Blob([pngData], { type: 'image/png' });
+        resolve({ blob, size: blob.size, name: baseName + '_compressed.png', mime: 'image/png' });
+      } else {
+        canvas.toBlob((blob) => {
+          const ext = mime === 'image/jpeg' ? '.jpg' : '.webp';
+          resolve({ blob, size: blob.size, name: baseName + '_compressed' + ext, mime });
+        }, mime, quality);
+      }
+    };
+    img.src = url;
+  });
+}
+
+/* Compress to a target file size (binary-search quality, then downscale if needed) */
+function encodeAtQuality(canvas, mime, q) {
+  return new Promise((resolve) => {
+    if (mime === 'image/png') {
+      const ctx = canvas.getContext('2d');
+      const rgba = ctx.getImageData(0, 0, canvas.width, canvas.height).data.buffer;
+      const cnum = q >= 1 ? 0 : Math.max(2, Math.round(256 * q));
+      const pngData = UPNG.encode([rgba], canvas.width, canvas.height, cnum);
+      resolve(new Blob([pngData], { type: 'image/png' }));
+    } else {
+      canvas.toBlob((blob) => resolve(blob), mime, q);
+    }
+  });
+}
+
+async function searchQuality(canvas, mime, targetBytes) {
+  const hiBlob = await encodeAtQuality(canvas, mime, 0.95);
+  let best;
+  if (hiBlob.size <= targetBytes) {
+    best = hiBlob;
+  } else {
+    const loBlob = await encodeAtQuality(canvas, mime, 0.05);
+    if (loBlob.size > targetBytes) {
+      best = loBlob;
+    } else {
+      let lo = 0.05, hi = 0.95;
+      best = loBlob;
+      for (let i = 0; i < 6; i++) {
+        const mid = (lo + hi) / 2;
+        const b = await encodeAtQuality(canvas, mime, mid);
+        if (b.size <= targetBytes) { best = b; lo = mid; } else { hi = mid; }
+      }
+    }
+  }
+  return best;
+}
+
+function compressToTargetSize(file, targetBytes, outputFormat) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = async () => {
+      URL.revokeObjectURL(url);
+
+      let mime;
+      if (outputFormat === 'auto') {
+        if (file.type === 'image/png') {
+          mime = 'image/png';
+        } else if (file.type === 'image/webp') {
+          mime = 'image/webp';
+        } else {
+          mime = 'image/jpeg';
+        }
+      } else {
+        mime = outputFormat;
+      }
+
+      const baseName = file.name.replace(/\.[^.]+$/, '');
+      const ext = mime === 'image/webp' ? '.webp' : (mime === 'image/png' ? '.png' : '.jpg');
+
+      let scale = 1;
+      let best = null;
+      for (let attempt = 0; attempt < 8; attempt++) {
+        const w = Math.max(1, Math.round(img.naturalWidth * scale));
+        const h = Math.max(1, Math.round(img.naturalHeight * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+
+        best = await searchQuality(canvas, mime, targetBytes);
+        if (best.size <= targetBytes || scale <= 0.15) {
+          break;
+        } else {
+          scale *= 0.8;
+        }
+      }
+
+      resolve({ blob: best, size: best.size, name: baseName + '_compressed' + ext, mime, overTarget: best.size > targetBytes });
+    };
+    img.src = url;
+  });
+}
+
+/* Download */
+function downloadOne(idx) {
+  const c = compressed[idx];
+  if (!c) return;
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(c.blob);
+  a.download = c.name;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+downloadAllBtn.addEventListener('click', () => {
+  compressed.forEach((c, i) => {
+    if (c) {
+      setTimeout(() => downloadOne(i), i * 200);
+    }
+  });
+});
+
+/* Clear */
+clearBtn.addEventListener('click', () => {
+  files.length = 0;
+  compressed.length = 0;
+  controls.classList.add('hidden');
+  statsBar.classList.add('hidden');
+  results.innerHTML = '';
+  downloadAllBtn.disabled = true;
+});
+
+/* FAQ Toggle */
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
+});
+</script>
+
+
+<script>document.querySelectorAll(".current-year").forEach(function (el) { el.textContent = new Date().getFullYear(); });</script>
+
+<footer class="open-source-attribution" style="padding:24px;text-align:center"><a href="https://upliftorch.com/">Upliftorch</a> · <a href="https://upliftorch.com/tools/image-compress/">Official demo / 線上工具</a></footer>
+</body>
+</html>
